@@ -27,10 +27,12 @@
 
 						if(outputArr[0] == "getInteractingGenes"){
 							//test case will just print outputArr[0] to make sure can pass params like that D:<
-							outputcontainer.innerHTML = "The genes ineracting with gene "+ outputArr[1] + "are";
+							outputcontainer.innerHTML = "The genes ineracting with gene "+ outputArr[1] + " are: ";
 							for(i = 2; i<outputArr.length; i++){
-								outputcontainer.innerHTML += ",";
 								outputcontainer.innerHTML += outputArr[i];
+								if(i != outputArr.length-1){
+									outputcontainer.innerHTML += ", ";
+								}
 							}
 						}
 						if(outputArr[0] == "getPatientData"){
