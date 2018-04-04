@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Project 1</title>
+		<!-- <link href="main.css" rel="stylesheet" type = "text/css"> -->
+		<script type = "text/javascript">
+			function queryDatabase(query, querytype){
+				if(window.XMLHttpRequest){
+					request = new XMLHttpRequest();
+				}
+				else{
+					request = new ActiveXObject("Microsoft.XMLHttp");
+				}
+				request.onreadystatechange = outputResult;
+				//url = "cgi-bin/queryADKB.py?query="+ query+ "&type=" + querytype; //querytype is which query we are querying
+				url = "queryADKB.php/?query="+ query+ "&type=" + querytype;
+				request.open("GET", url, true);
+				request.send(null);
+			}
+			function outputResult(){ //fillLog()
+				if(request.readyState == 4){
+					//delimited by a ; first response will always be the query type since that determines the format and where it goes. :)
+					output = request.responseXML;
+					outputArr = request.responseText.split(";");
+
+					if(outputArr.length > 2){
+
+						if(outputArr[0] == "getInteractingGenes"){
+							//test case will just print outputArr[0] to make sure can pass params like that D:<
+							outputcontainer.innerHTML = "The genes ineracting with gene "+ outputArr[1] + "are";
+							for(i = 2; i<outputArr.length; i++){
+								outputcontainer.innerHTML += outputArr[i];
+							}
+						}
+						if(outputArr[0] == "getPatientData"){
+							outputcontainer.innerHTML = "Patient id: " + outputArr[1] + "age: " + outputArr[2] + "gender: " + outputArr[3] + "education: " + outputArr[4];
+						}
+					}
+					else{
+						outputcontainer.innerHTML = "No results found";
+					}
+				}
+			}
+		</script>
+	<body>
+		<!-- <form action = "cgi-bin/queryADKB.py" method = "GET" > -->
+			Find all n-order interacting genes <br />
+			Enter a gene's entrez id number <input type = "text" id = "entrezid"> 
+			<input type="submit" onclick = "queryDatabase(entrezid.value, 'getInteractingGenes');" value="FindGene" /> <br /><!--form here-->
+		<!-- </form> -->
+		<!-- <form action = "cgi-bin/queryADKB.py" method = "GET" > -->
+			Find all patient info <br />
+			Enter patient id number <input type = "text" id = "patientid"> 
+			<input type="submit" onclick = "queryDatabase(patientid.value, 'getPatientData');" value="FindPatient" /> <br /><!--form here-->
+		<!-- </form> -->
+			<div id = "outputcontainer"></div>
+	</body>
+</html>
