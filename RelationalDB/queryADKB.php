@@ -12,10 +12,7 @@ echo $_GET['type'].";".$_GET['query'];
 if($querytype == "getInteractingGenes"){
 
 	$getGenes = 'SELECT b FROM EntrezGeneSymbols INNER JOIN PPI ON EntrezGeneSymbols.entrez_id = PPI.a WHERE a = "'.$query.'";';
-	//echo ";hello";
-	//echo ";goodbye";
-	//echo ";". $getGenes;
-	//$getGenes = 'SELECT b FROM PPI WHERE a = "17";';
+
 	$rows = mysql_query($getGenes);
 
 	while($rowData = mysql_fetch_row($rows)){
