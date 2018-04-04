@@ -6,7 +6,7 @@ import cgitb
 #enable error logging 
 cgitb.enable(display = 0, logdir = "../logdir")
 
-ADdb = MySQLdb.connect(host = 'localhost', user = 'bigdata', passwd = 'bigdata')
+ADdb = MySQLdb.connect(host = 'localhost', user = 'bigdata', passwd = 'bigdata', local_infile = 1)
 
 cursor = ADdb.cursor()
 
@@ -28,7 +28,8 @@ for row in csv_data:
 		firstline = False
 		continue
 	else:
-		cursor.execute('INSERT INTO ADKnowledgeBase.Patients(patient_id,age,gender,education) VALUES("%s","%s","%s","%s");', (row[0],row[1],row[2],row[3]))
+		cursor.execute('INSERT INTO ADKnowledgeBase.Patients(patient_id,age,gender,education) VALUES(%s,%s,%s,%s);', (row[0],row[1],row[2],row[3]))
+#cursor.execute("LOAD DATA LOCAL INFILE 'patients.csv' INTO TABLE ADKnowledgeBase.Patients FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;")
 
 #create entrezGeneSymbols table
 csv_data = csv.reader(file('entrez_ids_genesymbol.csv'))
@@ -39,15 +40,18 @@ for row in csv_data:
 		firstline = False
 		continue
 	else:
-		cursor.execute('INSERT INTO ADKnowledgeBase.EntrezGeneSymbols(entrez_id, gene_symbol, gene_name) VALUES("%s","%s","%s");',(row[0],row[1],row[2]))
+		cursor.execute('INSERT INTO ADKnowledgeBase.EntrezGeneSymbols(entrez_id, gene_symbol, gene_name) VALUES(%s,%s,%s);',(row[0],row[1],row[2]))
+#cursor.execute("LOAD DATA INFILE 'entrez_ids_genesymbol.csv' INTO TABLE ADKnowledgeBase.EntrezGeneSymbols FIELDS TERMINATED BY ','  LINES TERMINATED BY '\r\n' IGNORE 1 LINES;")
 
-#create PPI table
+#load  PPI table
 csv_data = csv.reader(file('PPI.csv'))
 
 for row in csv_data:
-	cursor.execute('INSERT INTO ADKnowledgeBase.PPI(a,b) VALUES("%s","%s");',(row[0],row[1]))
+	cursor.execute('INSERT INTO ADKnowledgeBase.PPI(a,b) VALUES(%s,%s);',(row[0],row[1]))
+#cursor.execute("LOAD DATA INFILE 'PPI.csv' INTO TABLE ADKnowledgeBase.PPI FIELDS TERMINATED BY ','  LINES TERMINATED BY '\r\n';")
 
 ADdb.commit()
 #closes connection
 cursor.close()
+ADdb.close()
  
