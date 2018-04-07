@@ -1,0 +1,32 @@
+Download Cassandra: 
+http://cassandra.apache.org
+
+
+Install Cassandra:
+http://cassandra.apache.org/doc/latest/getting_started/installing.html
+
+
+Create keyspace and table:
+create keyspace genes_info 
+	with replication = { 
+		‘class’: ‘SimpleStrategy’, 
+		‘replication_factor’: 3
+};
+
+create table genes_info.proteins (
+	uniprot int primary key,
+	entrez text,
+	gene_symbol text,
+	gene_name text
+);
+
+
+Populate the proteins table:
+COPY genes_info.proteins (entrez, uno-rot, gene_name) FROM ‘test2.csv’; 
+
+*where test2.csv is a microsoft csv file
+*(Optional) Add other data-sets with the same command
+
+
+Query the database:
+SELECT ‘column’ from genes_info.proteins WHERE ‘conditions’ ALLOW FILTERING;
