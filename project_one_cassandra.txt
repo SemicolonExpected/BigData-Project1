@@ -19,7 +19,7 @@ create table genes_info.proteins (
 	gene_symbol text,
 	gene_name text
 );
-
+*add additional columns with ALTER TABLE 'table name' ADD 'column'
 
 Populate the proteins table:
 COPY genes_info.proteins (entrez, uno-rot, gene_name) FROM ‘test2.csv’; 
@@ -30,3 +30,5 @@ COPY genes_info.proteins (entrez, uno-rot, gene_name) FROM ‘test2.csv’;
 
 Query the database:
 SELECT ‘column’ from genes_info.proteins WHERE ‘conditions’ ALLOW FILTERING;
+
+
