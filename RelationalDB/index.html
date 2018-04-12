@@ -2,9 +2,12 @@
 <html lang="en">
 	<head>
 		<title>Project 1</title>
+		<!-- Author: Victoria Zhong
+		     Date: April 2018 -->
 		<!-- <link href="main.css" rel="stylesheet" type = "text/css"> -->
 		<script type = "text/javascript">
-			function queryDatabase(query, querytype){
+			function queryDatabase(query, querytype, order){
+				order = order || "1"; //order is an optional parameter. We set it to 1 when its not filled so we have something to pass if we are querying patients and for genes the default is 1 anyway
 				if(window.XMLHttpRequest){
 					request = new XMLHttpRequest();
 				}
@@ -13,7 +16,7 @@
 				}
 				request.onreadystatechange = outputResult;
 				//url = "cgi-bin/queryADKB.py?query="+ query+ "&type=" + querytype; //querytype is which query we are querying
-				url = "queryADKB.php/?query="+ query+ "&type=" + querytype;
+				url = "queryADKB.php/?query="+ query + "&type=" + querytype + "&order=" + order;
 				request.open("GET", url, true);
 				request.send(null);
 			}
@@ -27,11 +30,11 @@
 
 						if(outputArr[0] == "getInteractingGenes"){
 							//test case will just print outputArr[0] to make sure can pass params like that D:<
-							outputcontainer.innerHTML = "The genes ineracting with gene "+ outputArr[1] + " are: ";
+							geneoutputcontainer.innerHTML = "The genes interacting with gene "+ outputArr[1] + " are: ";
 							for(i = 2; i<outputArr.length; i++){
-								outputcontainer.innerHTML += outputArr[i];
-								if(i != outputArr.length-1){
-									outputcontainer.innerHTML += ", ";
+								geneoutputcontainer.innerHTML += outputArr[i];
+								if(i != outputArr.length-1 && !outputArr[i+1].includes("<br />")){
+									geneoutputcontainer.innerHTML += ", ";
 								}
 							}
 						}
@@ -47,15 +50,14 @@
 		</script>
 	<body>
 		<!-- <form action = "cgi-bin/queryADKB.py" method = "GET" > -->
-			Find all n-order interacting genes <br />
-			Enter a gene's entrez id number <input type = "text" id = "entrezid"> 
-			<input type="submit" onclick = "queryDatabase(entrezid.value, 'getInteractingGenes');" value="FindGene" /> <br /><!--form here-->
-		<!-- </form> -->
-		<!-- <form action = "cgi-bin/queryADKB.py" method = "GET" > -->
+			Find all n-order interacting genes (if order is not specified 1st order is implied) <br />
+			Enter a gene's entrez id number <input type = "text" id = "entrezid"> Order <input type="number" id="norder" min="1" max="11">
+			<input type="submit" onclick = "queryDatabase(entrezid.value, 'getInteractingGenes', norder.value);" value="Find Genes" /> <br />
+			<div style = "margin-top: 10px; margin-bottom: 10px;" id = "geneoutputcontainer"></div> 
 			Find all patient info <br />
 			Enter patient id number <input type = "text" id = "patientid"> 
 			<input type="submit" onclick = "queryDatabase(patientid.value, 'getPatientData');" value="FindPatient" /> <br /><!--form here-->
 		<!-- </form> -->
-			<div id = "outputcontainer"></div>
+			<div style = "margin-top: 10px; margin-bottom: 10px;" id = "outputcontainer"></div>
 	</body>
 </html>
